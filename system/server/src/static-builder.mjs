@@ -40,6 +40,7 @@ export function buildStaticSite({ outputRoot = DEFAULT_OUTPUT_ROOT, sections, cl
 
   const normalizedOutputRoot = path.resolve(outputRoot);
   const requestedSections = normalizeSections(sections);
+  const templateContext = getLegacyTemplateContext();
   const results = [];
 
   fs.mkdirSync(normalizedOutputRoot, { recursive: true });
@@ -48,40 +49,40 @@ export function buildStaticSite({ outputRoot = DEFAULT_OUTPUT_ROOT, sections, cl
   }
 
   if (requestedSections.has('index')) {
-    results.push(buildIndexPage({ outputRoot: normalizedOutputRoot }));
+    results.push(buildIndexPage({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('contact')) {
-    results.push(buildContactPage({ outputRoot: normalizedOutputRoot }));
+    results.push(buildContactPage({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('msg')) {
-    results.push(buildMessagePage({ outputRoot: normalizedOutputRoot }));
+    results.push(buildMessagePage({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('corporation-pages')) {
-    results.push(buildCorporationPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildCorporationPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('news-lists')) {
-    results.push(buildNewsCategoryPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildNewsCategoryPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('service-lists')) {
-    results.push(buildServiceCategoryPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildServiceCategoryPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('product-lists')) {
-    results.push(buildProductCategoryPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildProductCategoryPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('job-lists')) {
-    results.push(buildJobIndexPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildJobIndexPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('product-details')) {
-    results.push(buildProductDetailPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildProductDetailPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('service-details')) {
-    results.push(buildServiceDetailPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildServiceDetailPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('news-details')) {
-    results.push(buildNewsDetailPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildNewsDetailPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
   if (requestedSections.has('job-details')) {
-    results.push(buildJobDetailPages({ outputRoot: normalizedOutputRoot }));
+    results.push(buildJobDetailPages({ outputRoot: normalizedOutputRoot, templateContext }));
   }
 
   return {
@@ -92,8 +93,8 @@ export function buildStaticSite({ outputRoot = DEFAULT_OUTPUT_ROOT, sections, cl
   };
 }
 
-export function buildIndexPage({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
-  const templateContext = getLegacyTemplateContext();
+export function buildIndexPage({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
   const template = requireLegacyTemplate(templateContext.variant?.home_index, '首页模板');
   const html = renderLegacyIndexPage(template, templateContext);
 
@@ -101,8 +102,8 @@ export function buildIndexPage({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
   return createBuildResult('index', '首页', 1, 1);
 }
 
-export function buildContactPage({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
-  const templateContext = getLegacyTemplateContext();
+export function buildContactPage({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
   const templatePath = templateContext.variant?.contact || guessSiblingTemplatePath(templateContext.variant?.home_index, 'contact.htm');
   const template = requireLegacyTemplate(templatePath, '联系页面模板');
   const html = renderLegacyContactPage(template, templateContext);
@@ -111,8 +112,8 @@ export function buildContactPage({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
   return createBuildResult('contact', '联系页面', 1, 1);
 }
 
-export function buildMessagePage({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
-  const templateContext = getLegacyTemplateContext();
+export function buildMessagePage({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
   const templatePath = templateContext.variant?.msg_index || guessSiblingTemplatePath(templateContext.variant?.home_index, 'msg.htm');
   const template = requireLegacyTemplate(templatePath, '留言页面模板');
   const html = renderLegacyMessagePage(template, templateContext);
@@ -121,8 +122,8 @@ export function buildMessagePage({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
   return createBuildResult('msg', '留言页面', 1, 1);
 }
 
-export function buildCorporationPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
-  const templateContext = getLegacyTemplateContext();
+export function buildCorporationPages({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
   const template = requireLegacyTemplate(templateContext.variant?.co_index, '公司栏目模板');
   const items = templateContext.corporationCategories
     .filter((item) => normalizeInteger(item.parent_id, 0) === CORPORATION_ROOT_ID && normalizeInteger(item.is_external, 0) === 0);
@@ -131,12 +132,13 @@ export function buildCorporationPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {})
 
   for (const [index, item] of items.entries()) {
     const html = renderLegacyCorporationPage({ template, templateContext, item });
+    const normalizedHtml = normalizeLegacyRichTextHtml(html);
 
-    writeTextFile(outputRoot, path.join('about', `about-${item.id}.html`), html);
+    writeTextFile(outputRoot, path.join('about', `about-${item.id}.html`), normalizedHtml, { normalized: true });
     filesWritten += 1;
 
     if (index === 0) {
-      writeTextFile(outputRoot, path.join('about', 'index.html'), html);
+      writeTextFile(outputRoot, path.join('about', 'index.html'), normalizedHtml, { normalized: true });
       filesWritten += 1;
     }
   }
@@ -144,9 +146,10 @@ export function buildCorporationPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {})
   return createBuildResult('corporation-pages', '公司栏目页', items.length, filesWritten);
 }
 
-export function buildNewsCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
+export function buildNewsCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext = null } = {}) {
   return buildLegacyNewsSectionCategoryPages({
     outputRoot,
+    templateContext,
     rootId: NEWS_ROOT_ID,
     dirName: 'news',
     sectionKey: 'news-lists',
@@ -156,9 +159,10 @@ export function buildNewsCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}
   });
 }
 
-export function buildServiceCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
+export function buildServiceCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext = null } = {}) {
   return buildLegacyNewsSectionCategoryPages({
     outputRoot,
+    templateContext,
     rootId: SERVICE_ROOT_ID,
     dirName: 'service',
     sectionKey: 'service-lists',
@@ -168,14 +172,15 @@ export function buildServiceCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } =
   });
 }
 
-export function buildProductCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
-  const categories = listProductCategories();
-  const products = listProducts({ visibleOnly: false, limit: 10000 });
-  const templateContext = getLegacyTemplateContext();
+export function buildProductCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
+  const categories = templateContext.productCategories;
+  const products = getCachedProducts(templateContext);
   const template = requireLegacyTemplate(templateContext.variant?.produts_sort2, '产品分类模板');
   const categoryMap = new Map(categories.map((item) => [item.id, item]));
   const childrenByParent = groupBy(categories, (item) => normalizeInteger(item.parent_id, 0));
   const productsByCategory = groupBy(products, (item) => normalizeInteger(item.category_id, 0));
+  const descendantCategoryIdCache = new Map();
   const topLevelCategories = childrenByParent.get(0) || [];
   let filesWritten = 0;
 
@@ -204,7 +209,7 @@ export function buildProductCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } =
       continue;
     }
 
-    const descendantCategoryIds = getDescendantProductCategoryIds(childrenByParent, categoryId);
+    const descendantCategoryIds = getDescendantProductCategoryIds(childrenByParent, categoryId, descendantCategoryIdCache);
     const items = descendantCategoryIds
       .flatMap((id) => productsByCategory.get(id) || [])
       .slice()
@@ -226,7 +231,7 @@ export function buildProductCategoryPages({ outputRoot = DEFAULT_OUTPUT_ROOT } =
   return createBuildResult('product-lists', '产品分类页', categories.filter((item) => normalizeInteger(item.id, 0) !== 0).length, filesWritten);
 }
 
-export function buildJobIndexPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
+export function buildJobIndexPages({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
   const items = queryAll(
     `
       SELECT
@@ -244,7 +249,7 @@ export function buildJobIndexPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
       ORDER BY coalesce(created_at, '') DESC, id DESC
     `
   );
-  const templateContext = getLegacyTemplateContext();
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
   const template = requireLegacyTemplate(templateContext.variant?.job_index, '招聘列表模板');
   const pages = paginate(items, JOB_LIST_PAGE_SIZE);
   const pageList = pages.length > 0 ? pages : [[]];
@@ -274,16 +279,19 @@ export function buildJobIndexPages({ outputRoot = DEFAULT_OUTPUT_ROOT } = {}) {
   return createBuildResult('job-lists', '招聘列表页', items.length, filesWritten);
 }
 
-export function buildProductDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange } = {}) {
-  const products = filterByIdRange(listProducts({ visibleOnly: false, limit: 10000 }), idRange);
-  const templateContext = getLegacyTemplateContext();
+export function buildProductDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange, templateContext: providedTemplateContext = null } = {}) {
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
+  const products = filterByIdRange(getCachedProducts(templateContext), idRange);
   const template = requireLegacyTemplate(templateContext.variant?.produts_detail, '产品详情模板');
   const productMap = groupBy(products, (item) => normalizeInteger(item.category_id, 0));
+  for (const categoryProducts of productMap.values()) {
+    categoryProducts.sort(compareBySortAndId);
+  }
   let filesWritten = 0;
 
   for (const product of products) {
-    const categoryProducts = (productMap.get(normalizeInteger(product.category_id, 0)) || []).filter((item) => item.id !== product.id);
-    const relatedProducts = categoryProducts.slice().sort(compareBySortAndId).slice(0, 4);
+    const categoryProducts = productMap.get(normalizeInteger(product.category_id, 0)) || [];
+    const relatedProducts = takeOtherItems(categoryProducts, product.id, 4);
     const html = renderLegacyProductDetailPage({
       template,
       templateContext,
@@ -298,10 +306,11 @@ export function buildProductDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRa
   return createBuildResult('product-details', '产品详情页', products.length, filesWritten);
 }
 
-export function buildNewsDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange } = {}) {
+export function buildNewsDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange, templateContext = null } = {}) {
   return buildLegacyNewsSectionDetailPages({
     outputRoot,
     idRange,
+    templateContext,
     rootId: NEWS_ROOT_ID,
     dirName: 'news',
     sectionKey: 'news-details',
@@ -310,10 +319,11 @@ export function buildNewsDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange
   });
 }
 
-export function buildServiceDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange } = {}) {
+export function buildServiceDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange, templateContext = null } = {}) {
   return buildLegacyNewsSectionDetailPages({
     outputRoot,
     idRange,
+    templateContext,
     rootId: SERVICE_ROOT_ID,
     dirName: 'service',
     sectionKey: 'service-details',
@@ -322,7 +332,7 @@ export function buildServiceDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRa
   });
 }
 
-export function buildJobDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange } = {}) {
+export function buildJobDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange, templateContext: providedTemplateContext = null } = {}) {
   const jobs = filterByIdRange(queryAll(
     `
       SELECT
@@ -340,7 +350,7 @@ export function buildJobDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange 
       ORDER BY id ASC
     `
   ), idRange);
-  const templateContext = getLegacyTemplateContext();
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
   const template = requireLegacyTemplate(templateContext.variant?.job_detail, '招聘详情模板');
   let filesWritten = 0;
 
@@ -356,6 +366,7 @@ export function buildJobDetailPages({ outputRoot = DEFAULT_OUTPUT_ROOT, idRange 
 
 function buildLegacyNewsSectionCategoryPages({
   outputRoot,
+  templateContext: providedTemplateContext,
   rootId,
   dirName,
   sectionKey,
@@ -363,11 +374,11 @@ function buildLegacyNewsSectionCategoryPages({
   templateField,
   summaryClassName
 }) {
-  const categories = listNewsCategories();
-  const templateContext = getLegacyTemplateContext();
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
+  const categories = templateContext.newsCategories;
   const template = requireLegacyTemplate(templateContext.variant?.[templateField], `${sectionLabel}模板`);
   const categoryList = categories.filter((item) => normalizeInteger(item.parent_id, 0) === rootId);
-  const items = listNews({ limit: 10000 });
+  const items = getCachedNews(templateContext);
   const categoryBuckets = groupBy(items, (item) => normalizeInteger(item.category_id, 0));
   let filesWritten = 0;
 
@@ -390,16 +401,17 @@ function buildLegacyNewsSectionCategoryPages({
         dirName,
         summaryClassName
       });
+      const normalizedHtml = normalizeLegacyRichTextHtml(html);
 
       const fileName = pageNumber === 1 ? `${category.id}.html` : `${category.id}-${pageNumber}.html`;
-      writeTextFile(outputRoot, path.join(dirName, fileName), html);
+      writeTextFile(outputRoot, path.join(dirName, fileName), normalizedHtml, { normalized: true });
       filesWritten += 1;
 
       if (pageNumber === 1) {
-        writeTextFile(outputRoot, path.join(dirName, `${category.id}-1.html`), html);
+        writeTextFile(outputRoot, path.join(dirName, `${category.id}-1.html`), normalizedHtml, { normalized: true });
         filesWritten += 1;
         if (categoryIndex === 0) {
-          writeTextFile(outputRoot, path.join(dirName, 'index.html'), html);
+          writeTextFile(outputRoot, path.join(dirName, 'index.html'), normalizedHtml, { normalized: true });
           filesWritten += 1;
         }
       }
@@ -412,32 +424,40 @@ function buildLegacyNewsSectionCategoryPages({
 function buildLegacyNewsSectionDetailPages({
   outputRoot,
   idRange,
+  templateContext: providedTemplateContext,
   rootId,
   dirName,
   sectionKey,
   sectionLabel,
   templateField
 }) {
-  const categories = listNewsCategories();
-  const templateContext = getLegacyTemplateContext();
+  const templateContext = providedTemplateContext || getLegacyTemplateContext();
+  const categories = templateContext.newsCategories;
   const template = requireLegacyTemplate(templateContext.variant?.[templateField], `${sectionLabel}模板`);
   const allowedCategoryIds = new Set(getDescendantNewsCategoryIds(categories, rootId));
   const categoryMap = new Map(categories.map((item) => [item.id, item]));
   const items = filterByIdRange(
-    listNews({ limit: 10000 })
+    getCachedNews(templateContext)
       .filter((item) => allowedCategoryIds.has(normalizeInteger(item.category_id, 0)))
       .slice()
       .sort((left, right) => left.id - right.id),
     idRange
   );
   const categoryBuckets = groupBy(items, (item) => normalizeInteger(item.category_id, 0));
+  const neighborsById = new Map();
+  for (const siblings of categoryBuckets.values()) {
+    siblings.sort((left, right) => left.id - right.id);
+    for (let index = 0; index < siblings.length; index += 1) {
+      neighborsById.set(siblings[index].id, {
+        previous: index > 0 ? siblings[index - 1] : null,
+        next: index < siblings.length - 1 ? siblings[index + 1] : null
+      });
+    }
+  }
   let filesWritten = 0;
 
   for (const item of items) {
-    const siblings = (categoryBuckets.get(normalizeInteger(item.category_id, 0)) || []).slice().sort((left, right) => left.id - right.id);
-    const currentIndex = siblings.findIndex((entry) => entry.id === item.id);
-    const previous = currentIndex > 0 ? siblings[currentIndex - 1] : null;
-    const next = currentIndex >= 0 && currentIndex < siblings.length - 1 ? siblings[currentIndex + 1] : null;
+    const { previous, next } = neighborsById.get(item.id) || { previous: null, next: null };
     const category = categoryMap.get(normalizeInteger(item.category_id, 0));
     const html = renderLegacyNewsDetailPage({
       template,
@@ -561,6 +581,11 @@ function renderLegacyJobDetailPage({ template, templateContext, job }) {
 }
 
 function applyLegacyTemplateCommon(template, templateContext) {
+  const cachedTemplate = templateContext.commonTemplateCache?.get(template);
+  if (cachedTemplate !== undefined) {
+    return cachedTemplate;
+  }
+
   const site = templateContext.site;
   let html = template;
 
@@ -599,7 +624,9 @@ function applyLegacyTemplateCommon(template, templateContext) {
   html = html.replace(/#HOPE_Meta_Description\((\d+)\)#/g, (_, id) => templateContext.metaTypes.get(Number(id))?.meta_descriptions || '');
   html = html.replace(/#hope_meta_description\((\d+)\)#/gi, (_, id) => templateContext.metaTypes.get(Number(id))?.meta_descriptions || '');
 
-  return normalizeLegacyTemplateMarkup(html, site);
+  const normalizedHtml = normalizeLegacyTemplateMarkup(html, site);
+  templateContext.commonTemplateCache?.set(template, normalizedHtml);
+  return normalizedHtml;
 }
 
 function getLegacyTemplateContext() {
@@ -618,6 +645,8 @@ function getLegacyTemplateContext() {
     customLabels,
     metaTypes,
     site,
+    commonTemplateCache: new Map(),
+    dataCache: new Map(),
     corporationCategories: queryAll(
       `
         SELECT id, name, parent_id, sort_order, is_external, external_url, legacy_extra
@@ -628,6 +657,20 @@ function getLegacyTemplateContext() {
     productCategories: listProductCategories().slice().sort(compareCategoryOrder),
     newsCategories: listNewsCategories().slice().sort(compareCategoryOrder)
   };
+}
+
+function getCachedProducts(templateContext) {
+  if (!templateContext.dataCache?.has('products')) {
+    templateContext.dataCache?.set('products', listProducts({ visibleOnly: false, limit: 10000 }));
+  }
+  return templateContext.dataCache?.get('products') || listProducts({ visibleOnly: false, limit: 10000 });
+}
+
+function getCachedNews(templateContext) {
+  if (!templateContext.dataCache?.has('news')) {
+    templateContext.dataCache?.set('news', listNews({ limit: 10000 }));
+  }
+  return templateContext.dataCache?.get('news') || listNews({ limit: 10000 });
 }
 
 function normalizeLegacyTemplateMarkup(value, site) {
@@ -868,18 +911,19 @@ function writeProductCategoryPageSet({
       pageCount: pageList.length,
       totalRecords: items.length
     });
+    const normalizedHtml = normalizeLegacyRichTextHtml(html);
 
     const fileName = buildLegacyListFileName(fileStem, pageNumber);
-    writeTextFile(outputRoot, path.join('products', fileName), html);
+    writeTextFile(outputRoot, path.join('products', fileName), normalizedHtml, { normalized: true });
     filesWritten += 1;
-    writeTextFile(outputRoot, path.join('valve', fileName), html);
+    writeTextFile(outputRoot, path.join('valve', fileName), normalizedHtml, { normalized: true });
     filesWritten += 1;
 
     if (pageNumber === 1) {
       const firstPageFileName = `${fileStem}.html`;
-      writeTextFile(outputRoot, path.join('products', firstPageFileName), html);
+      writeTextFile(outputRoot, path.join('products', firstPageFileName), normalizedHtml, { normalized: true });
       filesWritten += 1;
-      writeTextFile(outputRoot, path.join('valve', firstPageFileName), html);
+      writeTextFile(outputRoot, path.join('valve', firstPageFileName), normalizedHtml, { normalized: true });
       filesWritten += 1;
     }
   }
@@ -887,27 +931,28 @@ function writeProductCategoryPageSet({
   return filesWritten;
 }
 
-function getDescendantProductCategoryIds(childrenByParent, rootId) {
-  const pending = [normalizeInteger(rootId, 0)];
-  const visited = new Set();
-
-  while (pending.length > 0) {
-    const currentId = pending.pop();
-    if (visited.has(currentId)) {
-      continue;
-    }
-
-    visited.add(currentId);
-    const children = childrenByParent.get(currentId) || [];
-    for (const child of children) {
-      const childId = normalizeInteger(child.id, 0);
-      if (childId !== 0 && !visited.has(childId)) {
-        pending.push(childId);
-      }
-    }
+function getDescendantProductCategoryIds(childrenByParent, rootId, cache = new Map(), visiting = new Set()) {
+  const normalizedRootId = normalizeInteger(rootId, 0);
+  if (cache.has(normalizedRootId)) {
+    return cache.get(normalizedRootId);
+  }
+  if (visiting.has(normalizedRootId)) {
+    return [normalizedRootId];
   }
 
-  return Array.from(visited);
+  visiting.add(normalizedRootId);
+  const descendantIds = [normalizedRootId];
+  for (const child of childrenByParent.get(normalizedRootId) || []) {
+    const childId = normalizeInteger(child.id, 0);
+    if (childId !== 0) {
+      descendantIds.push(...getDescendantProductCategoryIds(childrenByParent, childId, cache, visiting));
+    }
+  }
+  visiting.delete(normalizedRootId);
+
+  const result = [...new Set(descendantIds)];
+  cache.set(normalizedRootId, result);
+  return result;
 }
 
 function buildLegacyNewsCategoryBody({ pageItems, categoryId, pageNumber, pageCount, totalRecords, summaryClassName }) {
@@ -1162,10 +1207,10 @@ function cleanupHtmlFilesRecursive(currentPath) {
   }
 }
 
-function writeTextFile(outputRoot, relativePath, content) {
+function writeTextFile(outputRoot, relativePath, content, { normalized = false } = {}) {
   const filePath = path.resolve(outputRoot, relativePath);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, normalizeLegacyRichTextHtml(content), 'utf8');
+  fs.writeFileSync(filePath, normalized ? content : normalizeLegacyRichTextHtml(content), 'utf8');
 }
 
 function groupBy(items, keyFn) {
@@ -1178,6 +1223,20 @@ function groupBy(items, keyFn) {
     buckets.get(key).push(item);
   }
   return buckets;
+}
+
+function takeOtherItems(items, excludedId, limit) {
+  const result = [];
+  for (const item of items) {
+    if (item.id === excludedId) {
+      continue;
+    }
+    result.push(item);
+    if (result.length >= limit) {
+      break;
+    }
+  }
+  return result;
 }
 
 function paginate(items, pageSize) {

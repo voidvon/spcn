@@ -1,6 +1,7 @@
 import { requireAuth } from '../../middleware/auth.mjs';
 import { CONTENT_ROOT } from '../../config.mjs';
 import {
+  buildStaticSite,
   buildIndexPage,
   buildContactPage,
   buildMessagePage,
@@ -70,26 +71,7 @@ export default async function staticGenRoutes(app) {
           result = buildJobDetailPages({ outputRoot: CONTENT_ROOT });
           break;
         case 'all':
-          const results = [
-            buildIndexPage({ outputRoot: CONTENT_ROOT }),
-            buildContactPage({ outputRoot: CONTENT_ROOT }),
-            buildMessagePage({ outputRoot: CONTENT_ROOT }),
-            buildCorporationPages({ outputRoot: CONTENT_ROOT }),
-            buildProductCategoryPages({ outputRoot: CONTENT_ROOT }),
-            buildProductDetailPages({ outputRoot: CONTENT_ROOT }),
-            buildNewsCategoryPages({ outputRoot: CONTENT_ROOT }),
-            buildNewsDetailPages({ outputRoot: CONTENT_ROOT }),
-            buildServiceCategoryPages({ outputRoot: CONTENT_ROOT }),
-            buildServiceDetailPages({ outputRoot: CONTENT_ROOT }),
-            buildJobIndexPages({ outputRoot: CONTENT_ROOT }),
-            buildJobDetailPages({ outputRoot: CONTENT_ROOT })
-          ];
-          result = {
-            outputRoot: CONTENT_ROOT,
-            results,
-            totalFiles: results.reduce((sum, r) => sum + (r.filesWritten || 0), 0),
-            totalRecords: results.reduce((sum, r) => sum + (r.recordsProcessed || 0), 0)
-          };
+          result = buildStaticSite({ outputRoot: CONTENT_ROOT });
           break;
         default:
           return reply.badRequest('未知的生成类型');
