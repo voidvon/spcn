@@ -15,8 +15,8 @@ export const IMPORT_DIR = path.join(SERVER_ROOT, 'import');
 export const DATABASE_PATH = process.env.DATABASE_PATH || path.join(DATA_DIR, 'site.sqlite');
 export const PORT = Number.parseInt(process.env.PORT || '3000', 10);
 export const HOST = process.env.HOST || '127.0.0.1';
-export const UPLOAD_MAX_SIZE_KB = Number.parseInt(process.env.UPLOAD_MAX_SIZE_KB || '400', 10);
-export const UPLOAD_ALLOWED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif']);
+export const UPLOAD_MAX_SIZE_KB = Number.parseInt(process.env.UPLOAD_MAX_SIZE_KB || '1024', 10);
+export const UPLOAD_ALLOWED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp']);
 
 export const MIME_TYPES = new Map([
   ['.html', 'text/html; charset=utf-8'],
@@ -30,6 +30,7 @@ export const MIME_TYPES = new Map([
   ['.jpeg', 'image/jpeg'],
   ['.png', 'image/png'],
   ['.gif', 'image/gif'],
+  ['.webp', 'image/webp'],
   ['.svg', 'image/svg+xml'],
   ['.ico', 'image/x-icon'],
   ['.woff', 'font/woff'],

@@ -4,7 +4,7 @@ import fastifyMultipart from '@fastify/multipart';
 import fastifyCors from '@fastify/cors';
 import fastifySensible from '@fastify/sensible';
 import fastifyFormbody from '@fastify/formbody';
-import { HOST, PORT } from './config.mjs';
+import { HOST, PORT, UPLOAD_MAX_SIZE_KB } from './config.mjs';
 import { getDb } from './db.mjs';
 
 // 确保数据库初始化
@@ -37,7 +37,7 @@ export async function createApp(options = {}) {
 
   await app.register(fastifyMultipart, {
     limits: {
-      fileSize: (process.env.UPLOAD_MAX_SIZE_KB || 400) * 1024,
+      fileSize: UPLOAD_MAX_SIZE_KB * 1024,
       files: 1
     }
   });

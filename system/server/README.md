@@ -130,7 +130,7 @@ npm run build:static
 - `LOG_LEVEL`: 日志级别（默认: info）
 - `NODE_ENV`: 环境（development/production）
 - `COOKIE_SECRET`: Cookie 加密密钥（生产环境务必修改）
-- `UPLOAD_MAX_SIZE_KB`: 上传文件大小限制（默认: 400KB）
+- `UPLOAD_MAX_SIZE_KB`: 上传文件大小限制（默认: 1024KB）
 - `ACCESS_SOURCE`: Access 数据库路径（用于导出）
 - `CSV_ENCODING`: CSV 文件编码（默认: utf-8，旧文件用 gbk）
 - `RESET_TABLES`: 导入前是否重置表（1 = 是）
@@ -259,9 +259,9 @@ curl -X POST 'http://127.0.0.1:3000/api/uploads?utype=news' \
 - `/admin/uploads/frame-image?tMode=3&utype=prod`
 - `/admin/uploads/frame-gallery?tMode=3&utype=prod`
 
-允许格式：`jpg`、`jpeg`、`png`、`gif`
+允许格式：`jpg`、`jpeg`、`png`、`gif`、`webp`
 
-默认大小限制：`400KB`
+默认大小限制：`1MB`
 
 如果要生成一份新的静态站点预览：
 

@@ -43,7 +43,7 @@ function App() {
           <Route path="site-config" element={<SiteConfigPage />} />
         </Route>
       </Routes>
-      <Toaster />
+      <Toaster position="top-center" />
     </>
   )
 }

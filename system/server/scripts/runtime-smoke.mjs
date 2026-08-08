@@ -121,7 +121,7 @@ function createMultipartPayload({ boundary, fields = {}, file }) {
 }
 
 function extractUploadedPath(bodyText) {
-  const match = bodyText.match(/\/UploadFile\/[A-Za-z0-9/_-]+\.(?:jpg|jpeg|png|gif)/i);
+  const match = bodyText.match(/\/UploadFile\/[A-Za-z0-9/_-]+\.(?:jpg|jpeg|png|gif|webp)/i);
   return match ? match[0] : null;
 }
 

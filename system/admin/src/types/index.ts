@@ -71,6 +71,7 @@ export interface ProductCategory {
   id: number;
   name: string;
   parent_id: number;
+  depth?: number;
   sort_order: number;
   seo_keywords?: string;
   seo_description?: string;

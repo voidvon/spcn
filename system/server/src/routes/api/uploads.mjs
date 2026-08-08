@@ -20,9 +20,10 @@ export default async function uploadRoutes(app) {
 
     try {
       const result = saveUploadedFile({
-        buffer,
-        originalFilename,
-        utype
+        data: buffer,
+        extension: path.extname(originalFilename)
+      }, {
+        uploadType: utype
       });
 
       return {
