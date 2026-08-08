@@ -1,0 +1,706 @@
+/* The script adds this button to the shared legacy header. It must be hidden
+   by default so desktop rendering is identical to the original site. */
+.responsive-menu-toggle {
+  display: none;
+}
+
+/* Keep the fixed customer-service panel above KinSlideshow's z-index: 100
+   pagination controls on desktop. */
+#floatTools {
+  z-index: 200;
+}
+
+@media (max-width: 1023px) {
+  /* Every rule is scoped to mobile so desktop output remains untouched. */
+  :root {
+    --responsive-gutter: 16px;
+  }
+
+  html {
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  img,
+  video,
+  iframe,
+  object,
+  embed {
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+
+  body {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  #wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #banner {
+    max-width: 100%;
+  }
+
+  #banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  table {
+    max-width: 100%;
+  }
+
+  .rich-content,
+  .Index_Co,
+  .Index_pr,
+  .news_sp,
+  .job_sp,
+  .prod_sp,
+  .page-single {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .rich-content img,
+  .Index_Co img,
+  .Index_pr img,
+  .news_sp img,
+  .job_sp img,
+  .prod_sp img,
+  .page-single img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .rich-content table,
+  .Index_Co table,
+  .Index_pr table,
+  .news_sp table,
+  .job_sp table,
+  .prod_sp table,
+  .page-single table {
+    max-width: 100% !important;
+  }
+
+  .rich-content table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .site-nav {
+    min-height: 30px;
+    height: auto;
+    overflow-wrap: anywhere;
+  }
+
+  .page_list a,
+  .page_list span {
+    display: inline-block;
+    min-height: 36px;
+    line-height: 28px;
+    padding: 3px 9px;
+  }
+
+  .diy,
+  .rides-cs,
+  #floatTools {
+    z-index: 20;
+  }
+
+  .responsive-menu-toggle {
+    display: none;
+  }
+
+  body,
+  body button,
+  body input,
+  body select,
+  body textarea {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  #wrapper {
+    width: 100%;
+    padding-inline: var(--responsive-gutter);
+  }
+
+  .top {
+    display: flex;
+    min-height: 70px;
+    height: auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .top > img,
+  .top > a > img {
+    width: auto !important;
+    max-width: min(62vw, 220px);
+    max-height: 56px;
+  }
+
+  #lang {
+    position: static;
+    max-width: 42%;
+    text-align: right;
+  }
+
+  #lang .style3,
+  .top .style3 {
+    display: block;
+    font-size: 12px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  #MainMenu {
+    position: relative;
+    height: auto;
+    min-height: 44px;
+    padding: 0;
+    background: #e9f1fb;
+  }
+
+  #MainMenu > ul {
+    display: none;
+    float: none;
+    padding: 0;
+    margin: 0;
+    background: #fff;
+  }
+
+  #MainMenu.is-open > ul {
+    display: block;
+  }
+
+  #MainMenu > ul > li {
+    display: block;
+    float: none;
+    margin: 0;
+    border-bottom: 1px solid #dbe5f0;
+  }
+
+  #MainMenu > ul > li > a,
+  #MainMenu > ul > li > a span {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 44px;
+    line-height: 44px;
+    padding: 0 16px;
+    background: none;
+  }
+
+  #MainMenu > ul > li > ul.menulevel,
+  #MainMenu > ul > li:hover > ul.menulevel {
+    position: static;
+    display: block !important;
+    visibility: visible !important;
+    width: 100%;
+    padding: 0;
+  }
+
+  #MainMenu > ul > li > ul.menulevel li,
+  #MainMenu > ul > li > ul.menulevel li a {
+    display: block;
+    float: none;
+    width: 100%;
+    height: auto;
+    min-height: 40px;
+    line-height: 40px;
+    padding: 0 30px;
+  }
+
+  .responsive-menu-toggle {
+    display: flex;
+    width: 100%;
+    min-height: 44px;
+    align-items: center;
+    justify-content: space-between;
+    border: 0;
+    padding: 0 16px;
+    color: #15428b;
+    background: transparent;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .responsive-menu-toggle::after {
+    content: "☰";
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  #MainMenu.is-open .responsive-menu-toggle::after {
+    content: "×";
+    font-size: 28px;
+  }
+
+  #MainMenu + div[align="center"] {
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 0;
+    line-height: 1.8;
+    text-align: left !important;
+    white-space: nowrap;
+  }
+
+  #banner {
+    height: 112px;
+    margin-inline: calc(var(--responsive-gutter) * -1);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  #banner img {
+    width: 100% !important;
+    height: 112px !important;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* KinSlideshow lays each slide side by side inside its scroll track. */
+  #banner #KSS_content,
+  #banner #KSS_contentClone {
+    width: calc(100% / 4);
+  }
+
+  #banner #KSS_content a,
+  #banner #KSS_contentClone a {
+    display: block;
+    float: left;
+    width: 20%;
+    height: 112px;
+  }
+
+  #index_main,
+  #page_main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: none;
+  }
+
+  .index-left,
+  .index-right,
+  .index-news,
+  .index-about,
+  .index-newproducts,
+  .index-products,
+  .page-left,
+  .page-right {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 0;
+    overflow: visible;
+  }
+
+  .page-right {
+    order: 1;
+  }
+
+  .page-left {
+    order: 2;
+  }
+
+  #LeftMenu ul li a,
+  #LeftMenu ul li a span {
+    text-align: center;
+  }
+
+  #index_main h2,
+  .page-left h2,
+  .index-right h2 {
+    height: auto;
+    min-height: 36px;
+    line-height: 36px;
+    background-image: none;
+    border-bottom: 2px solid #2e4690;
+  }
+
+  #index_main h2 span,
+  .page-left h2 span,
+  .index-right h2 span,
+  .left-products > span,
+  .left-search > span {
+    display: inline;
+    float: none;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  #index_main h2 a,
+  .index-right h2 a {
+    float: right;
+    margin: 0;
+    padding: 8px 0;
+  }
+
+  #index_main h2 a img,
+  .index-right h2 a img {
+    width: 32px;
+    height: auto;
+  }
+
+  .index-news,
+  .index-about,
+  .index-right > div {
+    background: none;
+  }
+
+  .index-news ul,
+  .index-jobs ul {
+    padding: 4px 0 10px;
+  }
+
+  .index-news ul li,
+  .index-jobs ul li {
+    padding: 7px 0;
+    border-bottom: 1px dashed #d7d7d7;
+  }
+
+  .index-news ul li a,
+  .index-jobs ul li a {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+
+  .index-news ul li a span {
+    float: none;
+    display: block;
+    margin: 2px 0 0;
+  }
+
+  .index-about p {
+    line-height: 1.8;
+    padding: 8px 0;
+  }
+
+  .index-about p img {
+    width: 38%;
+    max-width: 145px;
+    height: auto;
+  }
+
+  .productsroll {
+    width: 100%;
+  }
+
+  #LeftArr1,
+  #RightArr1 {
+    display: none;
+  }
+
+  #ScrollBox {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    margin: 0;
+    overflow: visible;
+  }
+
+  #ScrollBox > li {
+    display: block;
+    float: none;
+    width: auto;
+    min-width: 0;
+  }
+
+  #ScrollBox > li a {
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  #ScrollBox > li img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
+
+  #ScrollBox > li.tvjpnr {
+    display: none;
+  }
+
+  .index-products ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .index-products ul li {
+    float: none;
+    width: auto;
+    padding: 0;
+  }
+
+  .index-products ul li a {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px;
+    overflow-wrap: anywhere;
+  }
+
+  .index-search p,
+  .left-search p {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    padding: 8px 0;
+  }
+
+  #searchtext,
+  #ProductsName,
+  .index-search input[type="text"],
+  .left-search input[type="text"] {
+    flex: 1 1 auto;
+    width: auto !important;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  #searchbutton,
+  .index-search input[type="submit"],
+  .left-search input[type="submit"] {
+    flex: 0 0 64px;
+    min-height: 44px;
+  }
+
+  .page-products,
+  .page-single,
+  .page-news,
+  .page-newsdetail,
+  .page-jobs,
+  .page-jobsdetail {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .page-products > ul,
+  .page-products > ul > table,
+  .page-products > ul > table > tbody,
+  .page-products > ul > table > tbody > tr,
+  .page-products > ul > table > tbody > tr > td,
+  .page-products > table,
+  .page-news > table,
+  .page-jobs > table,
+  .page-single > table {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Older list/detail templates use a 972/986px table instead of #page_main. */
+  #wrapper > table[width="972"],
+  #wrapper > table[width="980"],
+  #wrapper > table[width="986"],
+  #wrapper > table[width="972"] > tbody,
+  #wrapper > table[width="980"] > tbody,
+  #wrapper > table[width="986"] > tbody,
+  #wrapper > table[width="972"] > tbody > tr,
+  #wrapper > table[width="980"] > tbody > tr,
+  #wrapper > table[width="986"] > tbody > tr,
+  #wrapper > table[width="972"] > tbody > tr > td,
+  #wrapper > table[width="980"] > tbody > tr > td,
+  #wrapper > table[width="986"] > tbody > tr > td {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #wrapper > table[width="972"] > tbody > tr > td:first-child,
+  #wrapper > table[width="980"] > tbody > tr > td:first-child,
+  #wrapper > table[width="986"] > tbody > tr > td:first-child {
+    display: none !important;
+  }
+
+  #wrapper > table[width="972"] table,
+  #wrapper > table[width="980"] table,
+  #wrapper > table[width="986"] table {
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+  }
+
+  .page-products > ul > table,
+  .page-products > ul > table > tbody,
+  .page-products > ul > table > tbody > tr,
+  .page-products > ul > table > tbody > tr > td,
+  .page-right > table,
+  .page-right > table > tbody,
+  .page-right > table > tbody > tr,
+  .page-right > table > tbody > tr > td {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .page-products > ul > table > tbody > tr > td {
+    width: 100% !important;
+  }
+
+  .page-products > ul > table > tbody > tr > td > table {
+    width: 100% !important;
+  }
+
+  .page-products > ul > table > tbody > tr > td img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .page-products ul li {
+    width: 50%;
+    padding: 4px;
+  }
+
+  /* Product descriptions may contain their own lists. Keep those in normal
+     flow so the detail area grows before the category sidebar is stacked. */
+  .page-products .prod_sp {
+    height: auto !important;
+    min-height: 0;
+  }
+
+  .page-products .prod_sp ul {
+    margin: 6px 0 6px 20px;
+    padding: 0;
+  }
+
+  .page-products .prod_sp ul li {
+    display: list-item;
+    float: none;
+    width: auto;
+    padding: 0;
+    text-align: left;
+    list-style: disc;
+  }
+
+  .page-products ul li a,
+  .page-products ul li a span {
+    width: 100%;
+    min-height: 44px;
+    height: auto;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .con-add,
+  .con-add tbody,
+  .con-add tr,
+  .con-add td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .con-add td {
+    padding: 12px 0;
+    border-bottom: 1px solid #e3e7ed;
+  }
+
+  .page-guestbook {
+    width: 100%;
+  }
+
+  .page-guestbook dl dt,
+  .page-guestbook dl dd {
+    float: none;
+    width: 100%;
+    padding: 4px 0;
+    text-align: left;
+  }
+
+  .page-guestbook dl dd input,
+  .page-guestbook .Content,
+  .page-guestbook textarea,
+  .page-guestbook select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  #page_main form table,
+  #page_main form table tbody,
+  #page_main form table tr,
+  #page_main form table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  #page_main form table td {
+    min-height: 36px;
+    padding: 4px 0;
+  }
+
+  #page_main form input[type="text"],
+  #page_main form input[type="email"],
+  #page_main form input[type="tel"],
+  #page_main form textarea {
+    width: 100% !important;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  #page_main form textarea {
+    min-height: 140px;
+  }
+
+  #page_main form input[type="button"],
+  #page_main form input[type="submit"],
+  #page_main form input[type="reset"] {
+    min-width: 96px;
+    min-height: 44px;
+    margin: 4px 4px 4px 0;
+  }
+
+  .diy,
+  .rides-cs,
+  #floatTools {
+    display: none !important;
+  }
+
+  #copyright {
+    padding: 18px 0;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+
+  #wrapper > table td,
+  #wrapper > table th {
+    height: auto !important;
+    padding: 4px 0;
+  }
+}

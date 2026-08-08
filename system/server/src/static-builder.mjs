@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { CONTENT_ROOT, SYSTEM_ROOT, TEMPLATE_ROOT } from './config.mjs';
+import { CONTENT_ROOT, SERVER_ROOT, SYSTEM_ROOT, TEMPLATE_ROOT } from './config.mjs';
 import { getDb, queryAll, queryOne } from './db.mjs';
 import { listContacts } from './services/contacts.mjs';
 import { listNewsCategories } from './services/news-categories.mjs';
@@ -39,6 +39,7 @@ export function buildStaticSite({ outputRoot = DEFAULT_OUTPUT_ROOT, sections, cl
   getDb();
 
   const normalizedOutputRoot = path.resolve(outputRoot);
+  ensureResponsiveAssets(normalizedOutputRoot);
   const requestedSections = normalizeSections(sections);
   const templateContext = getLegacyTemplateContext();
   const results = [];
@@ -91,6 +92,23 @@ export function buildStaticSite({ outputRoot = DEFAULT_OUTPUT_ROOT, sections, cl
     totalFiles: results.reduce((sum, item) => sum + item.filesWritten, 0),
     totalRecords: results.reduce((sum, item) => sum + item.recordsProcessed, 0)
   };
+}
+
+function ensureResponsiveAssets(outputRoot) {
+  const assetSourceRoot = path.join(SERVER_ROOT, '..', 'templates', 'blue', 'assets');
+  const assets = [
+    ['responsive.css', path.join(outputRoot, 'css', 'responsive.css')],
+    ['responsive.js', path.join(outputRoot, 'js', 'responsive.js')]
+  ];
+
+  for (const [fileName, destination] of assets) {
+    const source = path.join(assetSourceRoot, fileName);
+    if (!fs.existsSync(source)) {
+      throw new Error(`响应式资源不存在: ${source}`);
+    }
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.copyFileSync(source, destination);
+  }
 }
 
 export function buildIndexPage({ outputRoot = DEFAULT_OUTPUT_ROOT, templateContext: providedTemplateContext = null } = {}) {
@@ -687,6 +705,7 @@ function normalizeLegacyTemplateMarkup(value, site) {
     .replace(/\/search\.asp\?action=search/gi, '/search')
     .replace(/\/Search\.asp\b/gi, '/search')
     .replace(/\/search\.asp\b/gi, '/search')
+    .replace(/(\bhref\s*=\s*["'])\/news(["'])/gi, '$1/news/$2')
     .replace(/\/ajaxcode\/prodMsg\.asp/gi, '/ajaxcode/prodmsg')
     .replace(/\/ajaxcode\/prodmsg\.asp/gi, '/ajaxcode/prodmsg')
     .replace(/\/ajaxcode\/msg\.asp/gi, '/ajaxcode/msg')
@@ -701,6 +720,22 @@ function normalizeLegacyTemplateMarkup(value, site) {
     .replace(/电话:\s*021-51602737/gi, companyPhone ? `电话:${companyPhone}` : '')
     .replace(/传真:\s*021-51062757/gi, companyFax ? `传真:${companyFax}` : '')
     .replace(/info@(?:<strong>)?spiraxsarcocn(?:<\/strong>)?\.com/gi, companyEmail);
+
+  // The legacy custom header is stored in the database and is shared by every
+  // generated page. Inject the mobile assets here so all template variants
+  // receive the same responsive behavior without editing generated HTML.
+  if (/<head\b[^>]*>/i.test(output) && !/\/css\/responsive\.css(?:["'?]|\b)/i.test(output)) {
+    const assets = '\n<link rel="stylesheet" href="/css/responsive.css" />\n<script defer src="/js/responsive.js"></script>\n';
+    output = /<\/head>/i.test(output)
+      ? output.replace(/<\/head>/i, `${assets}</head>`)
+      : output.replace(/<head\b[^>]*>/i, `$&${assets}`);
+  }
+  if (/<head\b[^>]*>/i.test(output) && !/<meta\s+name=["']viewport["']/i.test(output)) {
+    const viewport = '\n<meta name="viewport" content="width=device-width, initial-scale=1" />\n';
+    output = /<\/head>/i.test(output)
+      ? output.replace(/<\/head>/i, `${viewport}</head>`)
+      : output.replace(/<head\b[^>]*>/i, `$&${viewport}`);
+  }
 
   return output;
 }
