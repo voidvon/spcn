@@ -5,9 +5,17 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "npm --prefix system/server run dev",
+    "build:admin": "npm --prefix system/admin run build",
+    "build:dist": "npm run build:admin && node scripts/build-dist.mjs",
+    "build": "npm run build:dist",
     "build:site": "npm --prefix system/server run build:static",
     "db:init": "npm --prefix system/server run db:init",
     "db:import": "npm --prefix system/server run db:import",
-    "admin:create": "npm --prefix system/server run admin:create --"
+    "admin:create": "npm --prefix system/server run admin:create --",
+    "test:release-version": "node --test scripts/next-release-version.test.mjs",
+    "test:server": "npm --prefix system/server run test",
+    "test": "npm run test:release-version && npm run test:server",
+    "release:prepare": "node scripts/release.mjs --prepare-only",
+    "release": "node scripts/release.mjs"
   }
 }

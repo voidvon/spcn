@@ -9,6 +9,8 @@ node_modules/
 # Generated admin build output
 /system/admin/dist/
 /system/admin/dist-ssr/
+/dist/
+/release-assets/
 
 # Generated server/debug output
 /system/server/generated-debug/
@@ -24,6 +26,8 @@ node_modules/
 # Logs and local runtime files
 *.log
 logs/
+.deploy/
+.updates/
 *.local
 
 # Temporary files and caches

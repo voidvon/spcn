@@ -1,4 +1,4 @@
-import { requireAuth } from '../../middleware/auth.mjs';
+import { requireAuth, requireSameOrigin } from '../../middleware/auth.mjs';
 import {
   listAdminsAdmin,
   getAdminById,
@@ -7,6 +7,11 @@ import {
   deleteAdmin,
   updateAdminPassword
 } from '../../services/admins.mjs';
+import {
+  getSystemVersionStatus,
+  installLatestSystemRelease,
+  requestSystemRestart
+} from '../../services/system-updates.mjs';
 
 export default async function adminApiRoutes(app) {
   // 获取当前管理员信息
@@ -17,6 +22,55 @@ export default async function adminApiRoutes(app) {
       success: true,
       data: request.adminUser
     };
+  });
+
+  app.get('/admin/system-version', {
+    onRequest: [requireAuth]
+  }, async (request, reply) => {
+    reply.header('Cache-Control', 'private, no-store, max-age=0');
+    const data = await getSystemVersionStatus({ force: request.query?.refresh === '1' });
+    return {
+      success: true,
+      data: { ...data, can_update: data.update_supported, can_restart: true }
+    };
+  });
+
+  app.post('/admin/system-version/update', {
+    onRequest: [requireAuth, requireSameOrigin]
+  }, async (request, reply) => {
+    try {
+      const data = await installLatestSystemRelease();
+      return { success: true, data, message: data.message };
+    } catch (error) {
+      if (error.code === 'UPDATE_IN_PROGRESS') {
+        return reply.code(409).send({ success: false, message: error.message });
+      }
+      request.log.error({ err: error }, 'system update failed');
+      return reply.code(422).send({
+        success: false,
+        error_code: error.code || 'SYSTEM_UPDATE_FAILED',
+        message: error.message || '系统更新失败'
+      });
+    }
+  });
+
+  app.post('/admin/system-version/restart', {
+    onRequest: [requireAuth, requireSameOrigin]
+  }, async (request, reply) => {
+    try {
+      const data = await requestSystemRestart();
+      return reply.code(202).send({ success: true, data, message: data.message });
+    } catch (error) {
+      if (error.code === 'UPDATE_IN_PROGRESS' || error.code === 'RESTART_IN_PROGRESS') {
+        return reply.code(409).send({ success: false, message: error.message });
+      }
+      request.log.error({ err: error }, 'system restart failed');
+      return reply.code(500).send({
+        success: false,
+        error_code: error.code || 'SYSTEM_RESTART_FAILED',
+        message: error.message || '系统重启失败'
+      });
+    }
   });
 
   // 管理员列表

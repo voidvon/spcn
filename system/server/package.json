@@ -12,7 +12,9 @@
     "db:import": "node scripts/import-csv.mjs",
     "db:repair-encoding": "node scripts/repair-legacy-encoding.mjs --write",
     "admin:create": "node scripts/create-admin.mjs",
-    "build:static": "node scripts/build-static.mjs"
+    "build:static": "node scripts/build-static.mjs",
+    "test:system-updates": "node --test tests/system-updates.test.mjs",
+    "test": "npm run test:system-updates"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

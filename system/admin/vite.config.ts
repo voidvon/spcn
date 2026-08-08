@@ -15,35 +15,35 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/admin/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/admin/login': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/admin/logout': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/admin/build': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/UploadFile': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/uploadfile': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
       '/skin': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4445',
         changeOrigin: true,
       },
     },
