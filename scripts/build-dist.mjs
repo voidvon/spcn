@@ -176,7 +176,7 @@ npm run admin:create -- admin your-password
 
 ## 后台在线更新
 
-- 后台默认从 \`https://github.com/voidvon/spiraxsarcocn.com\` 检查并下载最新 Release，可通过 \`CMS_RELEASE_REPOSITORY\` 和 \`CMS_RELEASE_ASSET_PREFIX\` 覆盖。
+- 后台默认从 \`https://github.com/voidvon/spcn\` 检查并下载最新 Release，可通过 \`CMS_RELEASE_REPOSITORY\` 和 \`CMS_RELEASE_ASSET_PREFIX\` 覆盖。
 - 正式 Release 和包含可信 Git 提交号的普通构建包都允许执行在线更新。
 - Node.js 服务账号需要对程序目录、\`system/\`、\`scripts/\` 和 \`system/server/node_modules/\` 具有写权限。
 - 更新过程会保留 \`data/\`、\`html/\`、\`uploads/\`、环境配置和部署运行目录。

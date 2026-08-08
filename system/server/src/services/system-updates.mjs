@@ -8,7 +8,8 @@ import { promisify } from 'node:util';
 import { PROJECT_ROOT } from '../config.mjs';
 
 const execFileAsync = promisify(execFile);
-const RELEASE_REPOSITORY = String(process.env.CMS_RELEASE_REPOSITORY || 'voidvon/spiraxsarcocn.com').trim();
+export const DEFAULT_RELEASE_REPOSITORY = 'voidvon/spcn';
+const RELEASE_REPOSITORY = String(process.env.CMS_RELEASE_REPOSITORY || DEFAULT_RELEASE_REPOSITORY).trim();
 const RELEASE_ASSET_PREFIX = String(process.env.CMS_RELEASE_ASSET_PREFIX || 'spiraxsarcocn').trim();
 const GITHUB_API_BASE = 'https://api.github.com';
 const RELEASE_CACHE_TTL_MS = 5 * 60 * 1000;

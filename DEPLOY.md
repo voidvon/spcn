@@ -40,6 +40,6 @@ npm run admin:create -- admin your-password
 
 - Build a local release package with `npm run release:prepare`.
 - Publish a GitHub Release with `npm run release`; this requires an `origin` remote and authenticated GitHub CLI.
-- The updater defaults to repository `voidvon/spiraxsarcocn.com` and asset prefix `spiraxsarcocn`.
+- The updater defaults to repository `voidvon/spcn` and asset prefix `spiraxsarcocn`.
 - Override these with `CMS_RELEASE_REPOSITORY=owner/repository` and `CMS_RELEASE_ASSET_PREFIX=prefix` when deploying elsewhere.
 - Online updates preserve `data/`, `html/`, uploads, `.env*`, `.deploy/`, and `.updates/`, verify SHA256, and restart the Node service after installation.

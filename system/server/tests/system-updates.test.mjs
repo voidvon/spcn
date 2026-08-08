@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import test from 'node:test';
 
 import {
+  DEFAULT_RELEASE_REPOSITORY,
   compareReleaseVersions,
   createNpmInstallEnvironment,
   getNpmInstallArgs,
@@ -16,6 +17,10 @@ import {
   requestSystemRestart,
   scheduleRequiredRestart
 } from '../src/services/system-updates.mjs';
+
+test('后台默认从指定 GitHub 仓库检查并下载版本', () => {
+  assert.equal(DEFAULT_RELEASE_REPOSITORY, 'voidvon/spcn');
+});
 
 test('手动重启通过统一重启调度器执行', async () => {
   let scheduled = 0;
@@ -149,4 +154,3 @@ test('独立重启守护会等待旧进程退出并启动新进程', async () =>
 
   assert.fail('重启守护没有在预期时间内启动新进程');
 });
-
