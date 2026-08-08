@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Generated static site output
+/html/*
+!/html/.gitkeep
+
+# Generated admin build output
+/system/admin/dist/
+/system/admin/dist-ssr/
+
+# Generated server/debug output
+/system/server/generated-debug/
+/generated-debug*/
+
+# Runtime databases and SQLite sidecar files
+/data/*
+!/data/.gitkeep
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Logs and local runtime files
+*.log
+logs/
+*.local
+
+# Temporary files and caches
+tmp/
+.tmp/
+.cache/
+coverage/
+*.tmp
+*.temp
+*.bak
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

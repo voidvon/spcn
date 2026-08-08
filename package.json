@@ -1,0 +1,13 @@
+{
+  "name": "spiraxsarcocn-dist",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "npm --prefix system/server run dev",
+    "build:site": "npm --prefix system/server run build:static",
+    "db:init": "npm --prefix system/server run db:init",
+    "db:import": "npm --prefix system/server run db:import",
+    "admin:create": "npm --prefix system/server run admin:create --"
+  }
+}

@@ -1,0 +1,434 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./typeset.css";
+@config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.985 0 0);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --radius: 0.625rem;
+    --sidebar-background: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --destructive-foreground: oklch(0.985 0 0);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --sidebar-background: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  @keyframes sidebar-tree-chevron-open {
+    from {
+      transform: translateZ(0) rotate(0deg);
+    }
+    to {
+      transform: translateZ(0) rotate(90deg);
+    }
+  }
+
+  @keyframes sidebar-tree-chevron-close {
+    from {
+      transform: translateZ(0) rotate(90deg);
+    }
+    to {
+      transform: translateZ(0) rotate(0deg);
+    }
+  }
+
+  .sidebar-tree-expand-trigger .sidebar-tree-expand-icon {
+    transform: translateZ(0) rotate(0deg);
+    transform-origin: center;
+    backface-visibility: hidden;
+    will-change: transform;
+    animation: sidebar-tree-chevron-close 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar-tree-expand-trigger[data-panel-open] .sidebar-tree-expand-icon {
+    transform: translateZ(0) rotate(90deg);
+    animation-name: sidebar-tree-chevron-open;
+  }
+
+  .rich-text-editor {
+    @apply overflow-hidden rounded-md border border-input bg-background;
+  }
+
+  .rich-text-editor-fill-height {
+    @apply flex h-full min-h-0 flex-col;
+  }
+
+  .rich-text-editor-toolbar {
+    @apply sticky top-0 z-10 flex flex-wrap items-center gap-1 border-b bg-muted/40 p-2;
+  }
+
+  .rich-text-editor-toolbar-group {
+    @apply flex items-center gap-1 border-r border-border pr-1 last:border-r-0 last:pr-0;
+  }
+
+  .rich-text-editor-body {
+    min-height: 0;
+  }
+
+  .rich-text-editor-fill-height .rich-text-editor-body {
+    flex: 1;
+    overflow: auto;
+  }
+
+  .rich-text-editor-source .cm-editor {
+    min-height: 360px;
+    font-size: 13px;
+  }
+
+  .rich-text-editor-source .cm-scroller {
+    overflow-x: hidden;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    line-height: 1.6;
+  }
+
+  .rich-text-editor-source .cm-content {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .rich-text-editor-source .cm-line {
+    max-width: 100%;
+  }
+
+  .rich-text-editor-fill-height .rich-text-editor-source,
+  .rich-text-editor-fill-height .rich-text-editor-source .cm-editor {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .rich-text-editor-content {
+    min-height: 260px;
+    padding: 1rem 1.25rem 2rem;
+    font-size: 14px;
+    line-height: 1.7;
+    outline: none;
+  }
+
+  .rich-text-editor-fill-height .rich-text-editor-content {
+    box-sizing: border-box;
+    min-height: 100%;
+  }
+
+  .rich-text-editor-content p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    color: hsl(var(--muted-foreground));
+    font-style: normal;
+  }
+
+  .rich-text-editor-content p {
+    margin: 0.65rem 0;
+  }
+
+  .rich-text-editor-content a {
+    color: #2563eb;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .rich-text-editor-content a:hover {
+    color: #1d4ed8;
+  }
+
+  .dark .rich-text-editor-content a {
+    color: #60a5fa;
+  }
+
+  .dark .rich-text-editor-content a:hover {
+    color: #93c5fd;
+  }
+
+  .rich-text-editor-content h1 {
+    margin: 1rem 0 0.75rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .rich-text-editor-content h2 {
+    margin: 0.9rem 0 0.65rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .rich-text-editor-content h3 {
+    margin: 0.8rem 0 0.55rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .rich-text-editor-content ul,
+  .rich-text-editor-content ol {
+    margin: 0.65rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .rich-text-editor-content ul {
+    list-style: disc;
+  }
+
+  .rich-text-editor-content ol {
+    list-style: decimal;
+  }
+
+  .rich-text-editor-content ul[data-type='taskList'] {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .rich-text-editor-content li[data-type='taskItem'] {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .rich-text-editor-content li[data-type='taskItem'] > label {
+    flex: 0 0 auto;
+    margin-top: 0.2rem;
+  }
+
+  .rich-text-editor-content blockquote {
+    margin: 0.8rem 0;
+    border-left: 3px solid hsl(var(--border));
+    padding-left: 1rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .rich-text-editor-content pre {
+    margin: 0.8rem 0;
+    overflow-x: auto;
+    border-radius: 0.375rem;
+    background: hsl(var(--muted));
+    padding: 0.85rem 1rem;
+    font-size: 13px;
+  }
+
+  .rich-text-editor-content code {
+    border-radius: 0.25rem;
+    background: hsl(var(--muted));
+    padding: 0.1rem 0.25rem;
+    font-size: 0.9em;
+  }
+
+  .rich-text-editor-content pre code {
+    background: transparent;
+    padding: 0;
+  }
+
+  .rich-text-editor-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 0.8rem 0;
+    border-radius: 0.375rem;
+  }
+
+  .rich-text-editor-content .tableWrapper {
+    margin: 0.9rem 0;
+    overflow-x: auto;
+  }
+
+  .rich-text-editor-content table {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .rich-text-editor-content th,
+  .rich-text-editor-content td {
+    position: relative;
+    min-width: 80px;
+    border: 1px solid hsl(var(--border));
+    padding: 0.55rem 0.7rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .rich-text-editor-content th {
+    background: hsl(var(--muted));
+    font-weight: 600;
+  }
+
+  .rich-text-editor-content th p,
+  .rich-text-editor-content td p {
+    margin: 0;
+  }
+
+  .rich-text-editor-content .selectedCell::after {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    content: '';
+    background: hsl(var(--primary) / 0.12);
+  }
+
+  .rich-text-editor-content .column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    bottom: -2px;
+    width: 4px;
+    pointer-events: none;
+    background: hsl(var(--primary));
+  }
+
+  .rich-text-editor-content.resize-cursor {
+    cursor: col-resize;
+  }
+
+  .ai-conversation-tiptap .tiptap {
+    display: grid;
+    align-content: safe center;
+    min-height: 64px;
+    max-height: calc(5 * 1.45em + 1.5rem);
+    padding: 0.75rem 4.25rem;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow-y: auto;
+    scroll-padding-block: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .ai-conversation-tiptap .tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    color: var(--muted-foreground);
+    font-style: normal;
+  }
+
+  .ai-conversation-tiptap .tiptap:focus {
+    outline: none;
+  }
+
+  .ai-conversation-tiptap .tiptap p {
+    margin: 0;
+  }
+
+  .ai-conversation-tiptap .tiptap.ProseMirror {
+    display: grid;
+  }
+
+  .ai-conversation-tiptap .tiptap.ProseMirror p {
+    width: 100%;
+  }
+
+  .ai-conversation-tiptap .ai-mention-chip {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 2px;
+    padding: 0.12rem 0.55rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 9999px;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    font-size: 0.85em;
+    line-height: 1.4;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .ai-conversation-tiptap .ai-tool-chip {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 2px;
+    padding: 0.12rem 0.55rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 9999px;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    font-size: 0.85em;
+    line-height: 1.4;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .ai-conversation-tiptap .ProseMirror-selectednode.ai-mention-chip,
+  .ai-conversation-tiptap .ProseMirror-selectednode.ai-tool-chip,
+  .ai-conversation-tiptap .ai-mention-chip[data-selected='true'] {
+    border-color: hsl(var(--ring));
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+  }
+
+  .ai-conversation-tiptap .tiptap:focus-visible {
+    outline: none;
+  }
+}
