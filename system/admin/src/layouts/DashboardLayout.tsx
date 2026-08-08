@@ -1,7 +1,8 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { authApi } from '@/api/auth'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, LogOut, Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +33,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 export default function DashboardLayout() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { resolvedTheme, setTheme } = useTheme()
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -55,6 +57,13 @@ export default function DashboardLayout() {
   const handleLogout = async () => {
     await authApi.logout()
     navigate('/login')
+  }
+
+  const isDark = resolvedTheme === 'dark'
+  const themeToggleLabel = isDark ? '切换浅色模式' : '切换黑夜模式'
+
+  const handleThemeToggle = () => {
+    setTheme(isDark ? 'light' : 'dark')
   }
 
   const menuGroups = [
@@ -155,10 +164,25 @@ export default function DashboardLayout() {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleLogout}>
-                退出登录
+          <SidebarMenu className="flex-row justify-end gap-1">
+            <SidebarMenuItem className="w-8 shrink-0">
+              <SidebarMenuButton
+                onClick={handleThemeToggle}
+                aria-label={themeToggleLabel}
+                tooltip={themeToggleLabel}
+                className="size-8! justify-center p-0"
+              >
+                {isDark ? <Sun /> : <Moon />}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem className="w-8 shrink-0">
+              <SidebarMenuButton
+                onClick={handleLogout}
+                aria-label="退出登录"
+                tooltip="退出登录"
+                className="size-8! justify-center p-0"
+              >
+                <LogOut />
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

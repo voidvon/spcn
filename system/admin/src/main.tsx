@@ -22,7 +22,12 @@ const ReactQueryDevtools = import.meta.env.DEV
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        storageKey="spirax-admin-theme"
+      >
         <BrowserRouter basename="/admin">
           <App />
         </BrowserRouter>
