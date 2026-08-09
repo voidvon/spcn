@@ -705,6 +705,7 @@ function normalizeLegacyTemplateMarkup(value, site) {
     .replace(/\/search\.asp\?action=search/gi, '/search')
     .replace(/\/Search\.asp\b/gi, '/search')
     .replace(/\/search\.asp\b/gi, '/search')
+    .replace(/(\bhref\s*=\s*["'])\/about(["'])/gi, '$1/about/$2')
     .replace(/(\bhref\s*=\s*["'])\/news(["'])/gi, '$1/news/$2')
     .replace(/\/ajaxcode\/prodMsg\.asp/gi, '/ajaxcode/prodmsg')
     .replace(/\/ajaxcode\/prodmsg\.asp/gi, '/ajaxcode/prodmsg')
@@ -836,7 +837,7 @@ function resolveCaseInsensitiveWithinRoot(rootDir, relativePath) {
 
 function buildLegacyProductsMenu(categories) {
   const roots = categories.filter((item) => normalizeInteger(item.parent_id, 0) === 0 && normalizeInteger(item.id, 0) !== 0);
-  return `<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">${roots.map((item) => `<li><a href="/valve/${item.id}.html"><span>${escapeHtml(item.name || '')}</span></a></li>`).join('')}</table>`;
+  return `<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">${roots.map((item) => `<li><a href="/valve/${item.id}.html"><span>斯派莎克${escapeHtml(item.name || '')}</span></a></li>`).join('')}</table>`;
 }
 
 function buildLegacyProductsMenuCompact(categories) {
